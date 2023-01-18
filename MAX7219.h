@@ -9,4 +9,5 @@
 #define MAX7219_H_
 void Print_Alphabet(void);
 void MAX7219_Init(void);
+void MAX72_Init_F(void);
 #endif /* MAX7219_H_ */
