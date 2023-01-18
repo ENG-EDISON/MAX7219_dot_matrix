@@ -16,7 +16,13 @@ uint8_t i=0;
 uint8_t ON=0xFF;
 uint8_t OFF=0x00;
 
-
+const uint8_t InitCommands[10][2]={
+		{0x09,0x00},
+		{0x0A,0x00},
+		{0x0B,0x07},
+		{0x0C,0x01},
+		{0x0F,0x00}
+};
 uint8_t LETTERS[CHAR_MAX][8]={
 		{0x00,0x08,0x14,0x14,0x14,0x14,0x08,0x00},/*0*/
 		{0x00,0x1C,0x08,0x08,0x08,0x0C,0x08,0x00},/*1*/
@@ -58,66 +64,27 @@ uint8_t LETTERS[CHAR_MAX][8]={
 		{0xFF,0xE7,0xC3,0xC1,0x81,0x81,0xCB,0xFF},/*HEART OFF*/
 };
 
-void MAX7219_Init(void)
+
+void MAX72_Init_F(void)
 {
-	shutdown[0]=0x09;
-	shutdown[1]=0x00;
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	////////////////////////////////////////////////////////BRIGTHNESS INTENSITY
-	shutdown[0]=0x0A;
-	shutdown[1]=0x00;
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	////////////////////////////////////////////////////////SCAN LIMIT
-	shutdown[0]=0x0B;
-	shutdown[1]=0x07;
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	////////////////////////////////////////////////////////NORMAL MODE
-	shutdown[0]=0x0C;
-	shutdown[1]=0x01;
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	///////////////////////////////////////////////////////NO TEST DISPLAY
-	shutdown[0]=0x0F;
-	shutdown[1]=0x00;
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
-	HAL_Delay(10);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+	uint8_t i=0;
+	for(i=0;i<5;i++)
+	{
+		shutdown[0]=InitCommands[i][0];
+		shutdown[1]=InitCommands[i][1];
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+		HAL_SPI_Transmit(&hspi1,shutdown,2, 1000);
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_SET);
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_6, GPIO_PIN_RESET);
+		HAL_Delay(10);
+	}
 }
+
 void Print_Alphabet(void)
 {
-	for(int i=CHAR_MAX;i<=CHAR_MAX;i++)
+	for(int i=0;i<=CHAR_MAX;i++)
 	{
 		for(int k=1;k<=8;k++)
 		{
@@ -129,5 +96,4 @@ void Print_Alphabet(void)
 		}
 		HAL_Delay(1000);
 	}
-
 }
